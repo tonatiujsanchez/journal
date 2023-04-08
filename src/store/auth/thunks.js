@@ -1,4 +1,4 @@
-import { loginWithEmailAndPassword, registerUserWithEmailAndPassword, singInWithGoogle } from "../../firebase/providers"
+import { loginWithEmailAndPassword, logoutFirebase, registerUserWithEmailAndPassword, singInWithGoogle } from "../../firebase/providers"
 import { checkingCredentials, login, logout } from "./authSlice"
 
 
@@ -62,3 +62,12 @@ export const starLoginWithEmailAndPassword = ({ email, password }) => {{
         dispatch( login( result ) )
     }
 }}
+
+
+export const startLogout = () => {
+    return async( dispatch ) => {
+        
+        await logoutFirebase()
+        dispatch( logout() )  
+    }
+}
