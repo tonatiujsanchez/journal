@@ -20,7 +20,7 @@ export const LoginPage = () => {
         password: '123456'
     })
 
-    const isAuthenticating = useMemo( ()=> status === authStatus.checking )
+    const isAuthenticating = useMemo( ()=> status === authStatus.checking, [status] )
 
     const dispatch = useDispatch()
 
