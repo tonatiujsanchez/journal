@@ -103,7 +103,6 @@ export const RegisterPage = () => {
                                 </Alert>
                             </Grid>
                         }
-
                         <Grid item xs={12}>
                             <Button disabled={ isAuthenticating } type="submit" variant="contained" fullWidth>
                                 Crear cuenta

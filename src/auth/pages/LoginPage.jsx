@@ -1,19 +1,21 @@
 import { useMemo } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
-import { Button, Grid, Link, TextField, Typography } from "@mui/material"
+
+import { Alert, Button, Grid, Link, TextField, Typography } from "@mui/material"
 import { Google } from "@mui/icons-material"
 
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from '../../hooks'
 
 import { AuthLayout } from '../layout/AuthLayout'
-import { checkingAuthentication, startGoogleSignIn, authStatus } from '../../store/auth'
+import { startGoogleSignIn, authStatus, starLoginWithEmailAndPassword } from '../../store/auth'
 
 
 
 export const LoginPage = () => {
 
-    const { status } = useSelector( state => state.auth )
+    const { status, errorMessage } = useSelector( state => state.auth )
+    const dispatch = useDispatch()
     
     const { email, password, onInputChange } = useForm({
         email: 'correo@correo.com',
@@ -22,18 +24,15 @@ export const LoginPage = () => {
 
     const isAuthenticating = useMemo( ()=> status === authStatus.checking, [status] )
 
-    const dispatch = useDispatch()
 
     const onSubmit = ( ev ) => {
         ev.preventDefault()
-
-        console.log({ email, password });
-        dispatch( checkingAuthentication( email, password ) )
+        dispatch( starLoginWithEmailAndPassword({ email, password }) )
     }
     
     
     const onGoogleSignIn = () => {
-        dispatch( startGoogleSignIn() )
+        dispatch( startGoogleSignIn({ email, password }) )
     }
 
 
@@ -63,6 +62,17 @@ export const LoginPage = () => {
                             fullWidth
                         />
                     </Grid>
+
+                        {
+                            !!errorMessage &&
+                            <Grid container spacing={2} sx={{ mt: 1 }}>
+                                <Grid item xs={12}>
+                                    <Alert severity="error">
+                                        { errorMessage }
+                                    </Alert>
+                                </Grid>
+                            </Grid>
+                        }
 
                     <Grid container spacing={2} sx={{ mb: 2, mt: 2 }}>
                         <Grid item xs={12} sm={6}>
