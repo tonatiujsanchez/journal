@@ -11,16 +11,18 @@ import { AuthLayout } from '../layout/AuthLayout'
 import { startGoogleSignIn, authStatus, starLoginWithEmailAndPassword } from '../../store/auth'
 
 
+const formData = {
+    email: '',
+    password: ''
+}
+
 
 export const LoginPage = () => {
 
     const { status, errorMessage } = useSelector( state => state.auth )
     const dispatch = useDispatch()
     
-    const { email, password, onInputChange } = useForm({
-        email: 'correo@correo.com',
-        password: '123456'
-    })
+    const { email, password, onInputChange } = useForm( formData )
 
     const isAuthenticating = useMemo( ()=> status === authStatus.checking, [status] )
 
