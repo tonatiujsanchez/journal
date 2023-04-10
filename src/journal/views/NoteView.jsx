@@ -1,6 +1,6 @@
-import { useEffect, useMemo } from "react"
-import { SaveOutlined } from "@mui/icons-material"
-import { Button, Grid, TextField, Typography } from "@mui/material"
+import { useEffect, useMemo, useRef } from "react"
+import { DeleteOutline, SaveOutlined, UploadOutlined } from "@mui/icons-material"
+import { Button, Grid, IconButton, TextField, Typography } from "@mui/material"
 
 import { useDispatch, useSelector } from "react-redux"
 import Swal from "sweetalert2"
@@ -8,7 +8,7 @@ import 'sweetalert2/dist/sweetalert2.css'
 
 import { useForm } from "../../hooks"
 
-import { setActiveNote, startSaveNote } from "../../store/journal"
+import { setActiveNote, startDeletingNote, startSaveNote, startUploadingFiles } from "../../store/journal"
 import { ImageGallery } from "../components"
 
 
@@ -23,6 +23,8 @@ export const NoteView = () => {
         const newDate = new Date( date )
         return newDate.toUTCString()
     },[])
+
+    const fileInputRef = useRef()
 
 
     useEffect(()=>{
@@ -41,6 +43,15 @@ export const NoteView = () => {
     },[messageSaved])
 
 
+    const onFileInputChange = ({ target }) => {
+        if(target.files.length === 0) { return }
+
+        dispatch( startUploadingFiles( target.files ) )
+    }
+
+    const onDeleteNote = () => {
+        dispatch( startDeletingNote() )
+    }
 
     const onSaveNote = () => {
         dispatch( startSaveNote() )
@@ -59,6 +70,20 @@ export const NoteView = () => {
                 </Typography>
             </Grid>
             <Grid item>
+                <input
+                    type="file"
+                    multiple
+                    ref={fileInputRef}
+                    onChange={ onFileInputChange }
+                    style={{ display: 'none' }}
+                />
+                <IconButton 
+                    color="primary" 
+                    disabled={isSaving}
+                    onClick={ ()=> fileInputRef.current.click() }
+                >
+                    <UploadOutlined />
+                </IconButton>
                 <Button 
                     onClick={ onSaveNote } 
                     disabled={ isSaving }    
@@ -94,9 +119,17 @@ export const NoteView = () => {
                     onChange={ onInputChange }
                 />
             </Grid>
-
-            {/* Galeria de imagenes */}
-            <ImageGallery />
+            <Grid container justifyContent="end">
+                <Button
+                    onClick={ onDeleteNote }
+                    sx={{ mt: 1, mb: 2 }}
+                    color="error"
+                >
+                    <DeleteOutline />
+                    Borrar
+                </Button>
+            </Grid>
+            <ImageGallery images={ note.imageUrls } />
         </Grid>
     )
 }
