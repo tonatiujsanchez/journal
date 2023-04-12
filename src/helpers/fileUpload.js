@@ -3,7 +3,8 @@
 export const  fileUpload = async( file ) => {
 
     if( !file ){
-        throw new Error('No hay ningún archivo a subir')
+        // throw new Error('No hay ningún archivo a subir')
+        return null
     }
 
     const cloudUrl = 'https://api.cloudinary.com/v1_1/dyyacuzl8/image/upload'
@@ -20,7 +21,8 @@ export const  fileUpload = async( file ) => {
         })
 
         if( !resp.ok ){
-            throw new Error('No se pudo subir la imagen')
+            // throw new Error('No se pudo subir la imagen')
+            return null
         }
 
         const result = await resp.json()
@@ -29,7 +31,8 @@ export const  fileUpload = async( file ) => {
 
     } catch (error) {
         console.log(error);
-        throw new Error( error.message )
+        return null
+        // throw new Error( error.message )
     }
 
 }
